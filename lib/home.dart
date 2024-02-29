@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/custom_widgets.dart';
+import 'package:slot_seek/notifications.dart';
+import 'package:slot_seek/profile.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,11 +25,11 @@ class HomePage extends StatelessWidget {
           preferredSize: const Size.fromHeight(60),
           child: AppBar(
             title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
                 Text(
-                  'Choose Slot',
-                  textAlign: TextAlign.justify,
+                  'Home',
+                  textAlign: TextAlign.center,
                   style: TextStyle(color: AppColors.textLightorange),
                 ),
                 Spacer(),
@@ -67,6 +69,32 @@ class HomePage extends StatelessWidget {
                 currentIndex: 0,
                 selectedItemColor: AppColors.secondaryColor,
                 unselectedItemColor: AppColors.greyLight,
+                onTap: (index) {
+                  if (index == 0) {
+                    // Navigate to profile page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomePage()),
+                    );
+                  }
+                  if (index == 1) {
+                    // Navigate to profile page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NotificationsPage()),
+                    );
+                  }
+                  // Implement navigation logic based on index
+                  if (index == 2) {
+                    // Navigate to profile page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>const  ProfilePage()),
+                    );
+                  }
+                },
                 items: const <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     icon: Icon(Icons.home),
@@ -89,6 +117,7 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
 
 class ParkingLot extends StatelessWidget {
   const ParkingLot({Key? key}) : super(key: key);
@@ -116,6 +145,7 @@ class ParkingLot extends StatelessWidget {
                   ParkingSpace(
                     status: ParkingStatus.occupied,
                     isOccupied: true,
+                    slotId: 'A1',
                     onTap: () {
                       _showSlotDetailsDialog(
                           context, 'Lot A', 'A1', ParkingStatus.occupied);
@@ -124,6 +154,7 @@ class ParkingLot extends StatelessWidget {
                   ParkingSpace(
                     status: ParkingStatus.occupied,
                     isOccupied: false,
+                    slotId: 'A2',
                     onTap: () {
                       _showSlotDetailsDialog(
                           context, 'Lot A', 'A2', ParkingStatus.available);
@@ -132,6 +163,7 @@ class ParkingLot extends StatelessWidget {
                   ParkingSpace(
                     status: ParkingStatus.occupied,
                     isOccupied: true,
+                    slotId: 'A3',
                     onTap: () {
                       _showSlotDetailsDialog(
                           context, 'Lot A', 'A3', ParkingStatus.occupied);
@@ -140,6 +172,7 @@ class ParkingLot extends StatelessWidget {
                   ParkingSpace(
                     status: ParkingStatus.occupied,
                     isOccupied: false,
+                    slotId: 'A4',
                     onTap: () {
                       _showSlotDetailsDialog(
                           context, 'Lot A', 'A4', ParkingStatus.available);
@@ -160,7 +193,7 @@ class ParkingLot extends StatelessWidget {
                   ParkingSpace(
                     status: ParkingStatus.occupied,
                     isOccupied: false,
-                  
+                    slotId: 'B1',
                     onTap: () {
                       _showSlotDetailsDialog(
                           context, 'Lot B', 'B1', ParkingStatus.available);
@@ -169,6 +202,7 @@ class ParkingLot extends StatelessWidget {
                   ParkingSpace(
                     status: ParkingStatus.occupied,
                     isOccupied: false,
+                    slotId: 'B2',
                     onTap: () {
                       _showSlotDetailsDialog(
                           context, 'Lot B', 'B2', ParkingStatus.available);
@@ -177,6 +211,7 @@ class ParkingLot extends StatelessWidget {
                   ParkingSpace(
                     status: ParkingStatus.occupied,
                     isOccupied: true,
+                    slotId: 'B3',
                     onTap: () {
                       _showSlotDetailsDialog(
                           context, 'Lot B', 'B3', ParkingStatus.occupied);
@@ -185,6 +220,7 @@ class ParkingLot extends StatelessWidget {
                   ParkingSpace(
                     status: ParkingStatus.occupied,
                     isOccupied: false,
+                    slotId: 'B4',
                     onTap: () {
                       _showSlotDetailsDialog(
                           context, 'Lot B', 'B4', ParkingStatus.available);
@@ -342,14 +378,16 @@ class ParkingLot extends StatelessWidget {
 
 class ParkingSpace extends StatelessWidget {
   final bool isOccupied;
-  final ParkingStatus status; // Add status parameter
+  final ParkingStatus status;
+  final String slotId; // Add slotId parameter
   final VoidCallback onTap;
 
   const ParkingSpace({
     Key? key,
     required this.isOccupied,
-    required this.status, // Update constructor
-    required this.onTap, 
+    required this.status,
+    required this.slotId, // Update constructor
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -366,29 +404,50 @@ class ParkingSpace extends StatelessWidget {
             width: 1,
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                isOccupied ? Icons.lock : Icons.lock_open,
-                color: isOccupied
-                    ? AppColors.secondaryColor
-                    : AppColors.primaryColor,
-                size: 40,
-              ),
-              Text(
-                isOccupied ? 'Occupied' : 'Available',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: isOccupied
-                      ? AppColors.secondaryColor
-                      : AppColors.primaryColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      slotId, // Display slotId
+
+                      style: TextStyle(
+                        color: isOccupied
+                            ? AppColors.secondaryColor
+                            : AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Icon(
+                      isOccupied ? Icons.lock : Icons.lock_open,
+                      color: isOccupied
+                          ? AppColors.secondaryColor
+                          : AppColors.primaryColor,
+                      size: 20,
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  isOccupied ? 'Occupied' : 'Available',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: isOccupied
+                        ? AppColors.secondaryColor
+                        : AppColors.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

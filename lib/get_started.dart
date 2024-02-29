@@ -75,7 +75,7 @@ class GetStartedPage extends StatelessWidget {
                     OutlinedButton(
                       onPressed: () {
                         // Add your onPressed logic here
-                         Navigator.of(context).push(
+                        Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const HomePage(),
                             ),

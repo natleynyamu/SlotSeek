@@ -44,70 +44,23 @@ class SignupPage extends StatelessWidget {
                     width: 300,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Register with an email and password to continue using the application',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: AppColors.textDark,
-                            fontSize: 14,
-                            fontFamily: 'Gabriela',
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        const CustomTextFormField(
+                      children: const [
+                        SizedBox(height: 30),
+                        CustomTextFormField(
                           labelText: 'Email',
                         ),
-                        const SizedBox(height: 20),
-                        const CustomTextFormField(
+                        SizedBox(height: 20),
+                        CustomTextFormField(
                           labelText: 'Password',
                         ),
-                        const SizedBox(height: 20),
-                        const CustomTextFormField(
+                        SizedBox(height: 20),
+                        CustomTextFormField(
                           labelText: 'Confirm Password',
                         ),
-                        const SizedBox(height: 40),
-                        SizedBox(
-                          width: 300,
-                          height: 60,
-                          child: PrimaryElevatedButton(
-                            onPressed: () {},
-                            text: 'Sign Up',
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Already have an account?',
-                              style: TextStyle(
-                                color: AppColors.textDark,
-                                fontSize: 14,
-                                fontFamily: 'Gabriela',
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const LoginPage(),
-                                ));
-                              },
-                              child: const Text(
-                                'Log in',
-                                style: TextStyle(
-                                  color: AppColors.secondaryColor,
-                                  fontSize: 20,
-                                  fontFamily: 'Gabriela',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        
+                                                
+                        
+                        
                       ],
                     ),
                   ),
@@ -115,7 +68,7 @@ class SignupPage extends StatelessWidget {
               ),
             ),
           ),
-            BackButtonWidget(context: context),
+          BackButtonWidget(context: context),
         ],
       ),
     );
