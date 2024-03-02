@@ -37,11 +37,21 @@ class LoginPage extends StatelessWidget {
                     style: TextStyle(
                       color: AppColors.primaryColor,
                       fontSize: 32,
-                      fontFamily: 'Gabriela',
+                      
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Log in with your email and password',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.textDark,
+                      fontSize: 14,
+                   
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),   const SizedBox(height: 20),
                   SizedBox(
                     width: 300,
                     child: Column(
@@ -65,7 +75,7 @@ class LoginPage extends StatelessWidget {
                               style: TextStyle(
                                 color: AppColors.textLightorange,
                                 fontSize: 20,
-                                fontFamily: 'Gabriela',
+                             
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -92,7 +102,7 @@ class LoginPage extends StatelessWidget {
                       style: TextStyle(
                         color: AppColors.primaryColor,
                         fontSize: 14,
-                        fontFamily: 'Gabriela',
+                        
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -106,7 +116,7 @@ class LoginPage extends StatelessWidget {
                         style: TextStyle(
                           color: AppColors.textDark,
                           fontSize: 14,
-                          fontFamily: 'Gabriela',
+                          
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -123,7 +133,7 @@ class LoginPage extends StatelessWidget {
                           style: TextStyle(
                             color: AppColors.secondaryColor,
                             fontSize: 20,
-                            fontFamily: 'Gabriela',
+                           
                             fontWeight: FontWeight.w400,
                           ),
                         ),

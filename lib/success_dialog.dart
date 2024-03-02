@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:slot_seek/login.dart';
 
 import 'app_colors.dart';
 import 'custom_widgets.dart';
@@ -79,7 +80,12 @@ class SuccessDialog extends StatelessWidget {
                   height: 50,
                   width: 250,
                   child: PrimaryElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            const LoginPage(),
+                      ));
+                    },
                     text: 'Log In to Continue',
                   ),
                 ),

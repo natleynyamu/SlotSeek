@@ -27,7 +27,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               
                 color: AppColors.primaryColor,
                 fontSize: 16,
-                fontFamily: 'Gabriela',
+              
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -142,7 +142,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: TextStyle(
               fontSize: 20,
               color: AppColors.primaryColor,
-              fontFamily: 'Gabriela',
+              
               fontWeight: FontWeight.w400,
               height: 0.06,
             ),

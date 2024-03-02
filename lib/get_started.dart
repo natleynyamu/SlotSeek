@@ -34,7 +34,7 @@ class GetStartedPage extends StatelessWidget {
               style: TextStyle(
                 color: AppColors.primaryColor,
                 fontSize: 16,
-                fontFamily: 'Gabriela',
+              
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -53,7 +53,7 @@ class GetStartedPage extends StatelessWidget {
                       style: TextStyle(
                         color: AppColors.primaryColor,
                         fontSize: 32,
-                        fontFamily: 'Gabriela',
+                      
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -66,7 +66,7 @@ class GetStartedPage extends StatelessWidget {
                         style: TextStyle(
                           color: AppColors.textDark,
                           fontSize: 14,
-                          fontFamily: 'Gabriela',
+                         
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -86,7 +86,7 @@ class GetStartedPage extends StatelessWidget {
                         foregroundColor: AppColors.primaryColor,
                         textStyle: const TextStyle(
                           fontSize: 20,
-                          fontFamily: 'Gabriela',
+                         
                           fontWeight: FontWeight.w400,
                         ),
                         side: const BorderSide(color: AppColors.primaryColor),
@@ -127,7 +127,7 @@ class GetStartedPage extends StatelessWidget {
                             style: TextStyle(
                               color: AppColors.textDark,
                               fontSize: 14,
-                              fontFamily: 'Gabriela',
+                            
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -143,7 +143,7 @@ class GetStartedPage extends StatelessWidget {
                               style: TextStyle(
                                 color: AppColors.secondaryColor,
                                 fontSize: 20,
-                                fontFamily: 'Gabriela',
+                           
                                 fontWeight: FontWeight.w400,
                               ),
                             ),

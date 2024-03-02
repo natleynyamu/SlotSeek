@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
+import 'package:slot_seek/book_slot.dart';
 import 'package:slot_seek/custom_widgets.dart';
 import 'package:slot_seek/notifications.dart';
 import 'package:slot_seek/profile.dart';
@@ -16,7 +17,7 @@ class HomePage extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             AppColors.primaryGradientStart,
-            AppColors.primaryGradientEnd
+            AppColors.primaryGradientEnd,
           ],
         ),
       ),
@@ -25,14 +26,14 @@ class HomePage extends StatelessWidget {
           preferredSize: const Size.fromHeight(60),
           child: AppBar(
             title: Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
-                Text(
-                  'Home',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.textLightorange),
+                Expanded(
+                  child: Text(
+                    'Home',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColors.textLightorange),
+                  ),
                 ),
-                Spacer(),
                 Icon(
                   Icons.search,
                   color: AppColors.textLightorange,
@@ -74,16 +75,14 @@ class HomePage extends StatelessWidget {
                     // Navigate to profile page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomePage()),
+                      MaterialPageRoute(builder: (context) => const HomePage()),
                     );
                   }
                   if (index == 1) {
-                    // Navigate to profile page
+                    // Navigate to notifications page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const NotificationsPage()),
+                      MaterialPageRoute(builder: (context) => const NotificationsPage()),
                     );
                   }
                   // Implement navigation logic based on index
@@ -91,7 +90,7 @@ class HomePage extends StatelessWidget {
                     // Navigate to profile page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>const  ProfilePage()),
+                      MaterialPageRoute(builder: (context) => const ProfilePage()),
                     );
                   }
                 },
@@ -129,103 +128,50 @@ class ParkingLot extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: 10),
+          const Text(
+            'Choose a Slot',
+            style: TextStyle(
+              color: AppColors.primaryColor,
+              fontSize: 24,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          const SizedBox(height: 10),
+          const SizedBox(
+            width: 320,
+            child: Text(
+              'Visualize vacant parking slots on this Lot. Tap on a slot to book a slot',
+              style: TextStyle(
+                color: AppColors.textDark,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Column(
                 children: [
-                  const Text(
-                    'Lot A',
-                    style: TextStyle(
-                      color: AppColors.textDark,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
+                  for (var slot in ParkingData.lotA)
+                    ParkingSpace(
+                      slot: slot,
+                      onTap: () {
+                        _showSlotDetailsDialog(context, slot);
+                      },
                     ),
-                  ),
-                  ParkingSpace(
-                    status: ParkingStatus.occupied,
-                    isOccupied: true,
-                    slotId: 'A1',
-                    onTap: () {
-                      _showSlotDetailsDialog(
-                          context, 'Lot A', 'A1', ParkingStatus.occupied);
-                    },
-                  ),
-                  ParkingSpace(
-                    status: ParkingStatus.occupied,
-                    isOccupied: false,
-                    slotId: 'A2',
-                    onTap: () {
-                      _showSlotDetailsDialog(
-                          context, 'Lot A', 'A2', ParkingStatus.available);
-                    },
-                  ),
-                  ParkingSpace(
-                    status: ParkingStatus.occupied,
-                    isOccupied: true,
-                    slotId: 'A3',
-                    onTap: () {
-                      _showSlotDetailsDialog(
-                          context, 'Lot A', 'A3', ParkingStatus.occupied);
-                    },
-                  ),
-                  ParkingSpace(
-                    status: ParkingStatus.occupied,
-                    isOccupied: false,
-                    slotId: 'A4',
-                    onTap: () {
-                      _showSlotDetailsDialog(
-                          context, 'Lot A', 'A4', ParkingStatus.available);
-                    },
-                  ),
                 ],
               ),
               Column(
                 children: [
-                  const Text(
-                    'Lot B',
-                    style: TextStyle(
-                      color: AppColors.textDark,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
+                  for (var slot in ParkingData.lotB)
+                    ParkingSpace(
+                      slot: slot,
+                      onTap: () {
+                        _showSlotDetailsDialog(context, slot);
+                      },
                     ),
-                  ),
-                  ParkingSpace(
-                    status: ParkingStatus.occupied,
-                    isOccupied: false,
-                    slotId: 'B1',
-                    onTap: () {
-                      _showSlotDetailsDialog(
-                          context, 'Lot B', 'B1', ParkingStatus.available);
-                    },
-                  ),
-                  ParkingSpace(
-                    status: ParkingStatus.occupied,
-                    isOccupied: false,
-                    slotId: 'B2',
-                    onTap: () {
-                      _showSlotDetailsDialog(
-                          context, 'Lot B', 'B2', ParkingStatus.available);
-                    },
-                  ),
-                  ParkingSpace(
-                    status: ParkingStatus.occupied,
-                    isOccupied: true,
-                    slotId: 'B3',
-                    onTap: () {
-                      _showSlotDetailsDialog(
-                          context, 'Lot B', 'B3', ParkingStatus.occupied);
-                    },
-                  ),
-                  ParkingSpace(
-                    status: ParkingStatus.occupied,
-                    isOccupied: false,
-                    slotId: 'B4',
-                    onTap: () {
-                      _showSlotDetailsDialog(
-                          context, 'Lot B', 'B4', ParkingStatus.available);
-                    },
-                  ),
                 ],
               ),
             ],
@@ -255,8 +201,7 @@ class ParkingLot extends StatelessWidget {
     );
   }
 
-  void _showSlotDetailsDialog(BuildContext context, String lotName,
-      String slotId, ParkingStatus status) {
+  void _showSlotDetailsDialog(BuildContext context, ParkingSlot slot) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -268,21 +213,23 @@ class ParkingLot extends StatelessWidget {
               radius: 0.06,
               colors: [
                 AppColors.primaryGradientStart,
-                AppColors.primaryGradientEnd
+                AppColors.primaryGradientEnd,
               ],
             ),
           ),
           child: AlertDialog(
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const Text(
                   'Slot Details',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor),
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
                 Align(
                   alignment: Alignment.topRight,
@@ -292,33 +239,34 @@ class ParkingLot extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                   ),
-                )
+                ),
               ],
             ),
             content: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+               
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      const Text('Parking Lot:'),
-                      const SizedBox(width: 10),
-                      Text(
-                        lotName,
-                        style: TextStyle(
-                          color: status == ParkingStatus.available
-                              ? AppColors
-                                  .primaryLight // Use primary color for available slots
-                              : AppColors.secondaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  // Row(
+                  //   children: [
+                  //     const Text('Parking Lot:'),
+                  //     const SizedBox(width: 10),
+                  //     Text(
+                  //       slot.lotName,
+                  //       style: TextStyle(
+                  //         color: slot.status == ParkingStatus.available
+                  //             ? AppColors
+                  //                 .primaryLight // Use primary color for available slots
+                  //             : AppColors.secondaryColor,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // const SizedBox(
+                  //   height: 20,
+                  //),
                   Row(
                     children: [
                       const Text('Slot:'),
@@ -326,9 +274,9 @@ class ParkingLot extends StatelessWidget {
                         width: 10,
                       ),
                       Text(
-                        slotId,
+                        slot.slotId,
                         style: TextStyle(
-                          color: status == ParkingStatus.available
+                          color: slot.status == ParkingStatus.available
                               ? AppColors
                                   .primaryLight // Use primary color for available slots
                               : AppColors.secondaryColor,
@@ -346,11 +294,11 @@ class ParkingLot extends StatelessWidget {
                         width: 10,
                       ),
                       Text(
-                        status == ParkingStatus.available
+                        slot.status == ParkingStatus.available
                             ? 'Available'
                             : 'Occupied',
                         style: TextStyle(
-                          color: status == ParkingStatus.available
+                          color: slot.status == ParkingStatus.available
                               ? AppColors
                                   .primaryLight // Use primary color for available slots
                               : AppColors.secondaryColor,
@@ -360,12 +308,17 @@ class ParkingLot extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   PrimaryElevatedButton(
-                    onPressed: status == ParkingStatus.available
-                        ? () {}
+                    onPressed: slot.status == ParkingStatus.available
+                        ? () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const BookSlotPage(),
+                              ),
+                            );
+                          }
                         : null, // Disable button if not available
-
                     text: 'Book Slot',
-                  )
+                  ),
                 ],
               ),
             ),
@@ -377,16 +330,12 @@ class ParkingLot extends StatelessWidget {
 }
 
 class ParkingSpace extends StatelessWidget {
-  final bool isOccupied;
-  final ParkingStatus status;
-  final String slotId; // Add slotId parameter
+  final ParkingSlot slot;
   final VoidCallback onTap;
 
   const ParkingSpace({
     Key? key,
-    required this.isOccupied,
-    required this.status,
-    required this.slotId, // Update constructor
+    required this.slot,
     required this.onTap,
   }) : super(key: key);
 
@@ -398,7 +347,8 @@ class ParkingSpace extends StatelessWidget {
         width: 150,
         height: 80,
         decoration: BoxDecoration(
-          color: isOccupied ? AppColors.greyLight : AppColors.textLightblue,
+          color:
+              slot.isOccupied ? AppColors.greyLight : AppColors.textLightblue,
           border: Border.all(
             color: AppColors.greyMedium,
             width: 1,
@@ -413,19 +363,18 @@ class ParkingSpace extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      slotId, // Display slotId
-
+                      slot.slotId,
                       style: TextStyle(
-                        color: isOccupied
+                        color: slot.isOccupied
                             ? AppColors.secondaryColor
                             : AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     const SizedBox(width: 20),
                     Icon(
-                      isOccupied ? Icons.lock : Icons.lock_open,
-                      color: isOccupied
+                      slot.isOccupied ? Icons.lock : Icons.lock_open,
+                      color: slot.isOccupied
                           ? AppColors.secondaryColor
                           : AppColors.primaryColor,
                       size: 20,
@@ -436,11 +385,11 @@ class ParkingSpace extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  isOccupied ? 'Occupied' : 'Available',
+                  slot.isOccupied ? 'Occupied' : 'Available',
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: isOccupied
+                    fontWeight: FontWeight.w400,
+                    color: slot.isOccupied
                         ? AppColors.secondaryColor
                         : AppColors.primaryColor,
                   ),
@@ -452,6 +401,69 @@ class ParkingSpace extends StatelessWidget {
       ),
     );
   }
+}
+
+class ParkingSlot {
+ // final String lotName;
+  final String slotId;
+  final bool isOccupied;
+  final ParkingStatus status;
+
+  ParkingSlot({
+   // required this.lotName,
+    required this.slotId,
+    required this.isOccupied,
+    required this.status,
+  });
+}
+
+class ParkingData {
+  static final List<ParkingSlot> lotA = [
+    ParkingSlot(
+       // lotName: 'Lot A',
+        slotId: '01',
+        isOccupied: true,
+        status: ParkingStatus.occupied),
+    ParkingSlot(
+       // lotName: 'Lot A',
+        slotId: '02',
+        isOccupied: false,
+        status: ParkingStatus.available),
+    ParkingSlot(
+       
+       // lotName: 'Lot A',
+        slotId: '03',
+        isOccupied: true,
+        status: ParkingStatus.occupied),
+    ParkingSlot(
+       // lotName: 'Lot A',
+        slotId: '04',
+        isOccupied: false,
+        status: ParkingStatus.available),
+  ];
+
+  static final List<ParkingSlot> lotB = [
+    ParkingSlot(
+        //lotName: 'Lot B',
+        slotId: '05',
+        isOccupied: false,
+        status: ParkingStatus.available),
+    ParkingSlot(
+       // lotName: 'Lot B',
+        slotId: '06',
+        isOccupied: false,
+        status: ParkingStatus.available),
+    ParkingSlot(
+        //lotName: 'Lot B',
+        slotId: '07',
+        isOccupied: true,
+        status: ParkingStatus.occupied),
+    ParkingSlot(
+        //lotName: 'Lot B',
+        slotId: '08',
+        isOccupied: false,
+        status: ParkingStatus.available),
+  ];
 }
 
 enum ParkingStatus {

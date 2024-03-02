@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
+import 'package:slot_seek/change_email.dart';
+import 'package:slot_seek/change_password.dart';
+import 'package:slot_seek/edit_profile.dart';
+import 'package:slot_seek/feedback_dialog.dart';
+import 'package:slot_seek/logout_dialog.dart';
 import 'package:slot_seek/notifications.dart';
+
 
 import 'home.dart';
 
@@ -44,17 +50,18 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
           ),
-          // Overlapping Container (Orange)
+          // Overlapping Container
           Positioned(
-            bottom: 80, // Adjust the distance from the bottom as needed
-            left: 40, // Adjust the left padding as needed
-            right: 40, // Adjust the right padding as needed
+            bottom: 60, // Adjust the distance from the bottom as needed
+            left: 20, // Adjust the left padding as needed
+            right: 20, // Adjust the right padding as needed
             height: MediaQuery.of(context).size.height *
                 0.55, // Adjust the height as needed
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                color: AppColors.greyLight,
+
+            child: Container(
+              color: AppColors.greyLight,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
                 child: Column(
                   children: [
                     const SizedBox(height: 30),
@@ -64,9 +71,9 @@ class ProfilePage extends StatelessWidget {
                     const SizedBox(height: 20),
                     buildRow(context, Icons.lock, 'Change Password'),
                     const SizedBox(height: 20),
-                    buildRow(context, Icons.palette, 'Theme'),
-                    const SizedBox(height: 20),
-                    buildRow(context, Icons.help, 'Help'),
+                    //buildRow(context, Icons.palette, 'Theme'),
+                    //const SizedBox(height: 20),
+                    buildRow(context, Icons.feedback, 'Feedback'),
                     const SizedBox(height: 20),
                     buildRow(context, Icons.exit_to_app, 'Logout',
                         isOrange: true),
@@ -149,6 +156,50 @@ class ProfilePage extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Handle button press
+        if (text == 'Logout') {
+          // Show logout confirmation dialog
+          showDialog(
+            context: context,
+            builder: (context) => const LogoutDialog(), // Use LogoutDialog here
+          );
+        } // Handle button press
+        if (text == 'Edit Profile Name') {
+           // Show edit profile name dialog
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const EditProfileDialog(); // Use the EditProfileDialog widget
+            },
+          );
+        }   // Handle button press
+        if (text == 'Change Password') {
+          // Show logout confirmation dialog
+          showDialog(
+            context: context,
+            builder: (context) => const ChangePassword(), // Use LogoutDialog here
+          );
+        }   // Handle button press
+        if (text == 'Change Email Address') {
+          // Show logout confirmation dialog
+          showDialog(
+            context: context,
+            builder: (context) => const ChangeEmail(), // Use LogoutDialog here
+          );
+        }   // Handle button press
+        if (text == 'Feedback') {
+          // Show logout confirmation dialog
+          showDialog(
+            context: context,
+            builder: (context) => const FeedbackDialog(), // Use LogoutDialog here
+          );
+        }   // Handle button press
+        // if (text == 'Theme') {
+        //   // Show logout confirmation dialog
+        //   showDialog(
+        //     context: context,
+        //     builder: (context) => const ThemePage(), // Use LogoutDialog here
+        //   );
+        // }   
       },
       child: Column(
         children: [
@@ -156,15 +207,19 @@ class ProfilePage extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                color: isOrange ?AppColors.secondaryColor : AppColors.primaryColor,
+                color: isOrange
+                    ? AppColors.secondaryColor
+                    : AppColors.primaryColor,
                 size: 24,
               ),
               const SizedBox(width: 10),
               Text(
                 text,
-                style:  TextStyle(color: isOrange
+                style: TextStyle(
+                    color: isOrange
                         ? AppColors.secondaryColor
-                        : AppColors.textDark, fontSize: 20),
+                        : AppColors.textDark,
+                    fontSize: 20),
               ),
             ],
           ),

@@ -1,3 +1,5 @@
+import 'package:email_validator/email_validator.dart';
+
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
 
@@ -17,7 +19,7 @@ class PrimaryElevatedButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).primaryColor,
-        textStyle: const TextStyle(fontSize: 20, fontFamily: "Gabriela"),
+        textStyle: const TextStyle(fontSize: 20,),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius:
@@ -56,24 +58,34 @@ class BackButtonWidget extends StatelessWidget {
 
 class CustomTextFormField extends StatelessWidget {
   final String labelText;
-  
+final TextEditingController? controller; // Add controller parameter
+  final bool obscureText; //
+  final bool isEmail;
 
   const CustomTextFormField({
     Key? key,
     required this.labelText,
-    
+    this.controller, // Initialize controller parameter
+     this.obscureText = false, // Default value is false
+     this.isEmail = false, // Default value is false
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       cursorColor: AppColors.secondaryColor,
+      validator: (value) {
+        if (isEmail && (value == null || !EmailValidator.validate(value))) {
+          return 'Please enter a valid email address';
+        }
+        return null; // Return null if validation succeeds
+      },
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: const TextStyle(
           color: AppColors.greyMedium,
           fontSize: 18,
-          fontFamily: 'Gabriela',
+          
           fontWeight: FontWeight.w400,
         ),
         focusedBorder: const UnderlineInputBorder(

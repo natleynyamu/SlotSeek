@@ -14,6 +14,6 @@ class AppColors {
   static const Color textLightorange = Color(0xFFFAF4F0);
   static const Color primaryGradientStart = Color(0x073846E0);
   static const Color primaryGradientEnd = Color(0x140E2542);
-  
+
   // Define other colors here
 }

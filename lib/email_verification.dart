@@ -34,7 +34,7 @@ class ForgotPasswordEmailVerification extends StatelessWidget {
                 style: TextStyle(
                   color: AppColors.primaryColor,
                   fontSize: 16,
-                  fontFamily: 'Gabriela',
+               
                   fontWeight: FontWeight.w400,
                 ),
               ),

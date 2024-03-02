@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
 import 'custom_widgets.dart';
-import 'login.dart';
+
 
 class SignupPage extends StatelessWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -29,17 +29,30 @@ class SignupPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 80),
+                  Image.asset('images/sign_up.png'),
                   const Text(
                     'Create an account',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: AppColors.primaryColor,
                       fontSize: 32,
-                      fontFamily: 'Gabriela',
+                    
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  const SizedBox(height: 30),
+                 
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Create an account to be able to keep your records, book records, leave feedback, set your preferences and receive personalized information',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.textDark,
+                      fontSize: 14,
+                 
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   SizedBox(
                     width: 300,
                     child: Column(
