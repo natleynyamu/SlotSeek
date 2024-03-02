@@ -27,7 +27,6 @@ class PasswordReset extends StatelessWidget {
                   style: TextStyle(
                     color: AppColors.primaryColor,
                     fontSize: 16,
-                  
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -83,11 +82,11 @@ class PasswordReset extends StatelessWidget {
                         ),
                         const SizedBox(height: 30),
                         SizedBox(
-                          height: 50, 
-                          width: 290, 
+                          height: 50,
+                          width: 290,
                           child: PrimaryElevatedButton(
                             onPressed: () {
-                            showDialog(
+                              showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return const SuccessDialog();

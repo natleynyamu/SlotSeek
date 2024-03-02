@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         primaryColor: AppColors.primaryColor, 
         fontFamily: 'StudioFeixenSansTRIAL', // Use your custom font family here
       ),debugShowCheckedModeBanner: false,
-      home:const  HomePage(),
+      home:const  BookSlotPage(),
     );
   }
 }

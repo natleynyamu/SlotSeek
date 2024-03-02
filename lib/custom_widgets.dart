@@ -19,7 +19,9 @@ class PrimaryElevatedButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).primaryColor,
-        textStyle: const TextStyle(fontSize: 20,),
+        textStyle: const TextStyle(
+          fontSize: 20,
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius:
@@ -30,8 +32,6 @@ class PrimaryElevatedButton extends StatelessWidget {
     );
   }
 }
-
-
 
 class BackButtonWidget extends StatelessWidget {
   final BuildContext context;
@@ -54,11 +54,9 @@ class BackButtonWidget extends StatelessWidget {
   }
 }
 
-
-
 class CustomTextFormField extends StatelessWidget {
   final String labelText;
-final TextEditingController? controller; // Add controller parameter
+  final TextEditingController? controller; // Add controller parameter
   final bool obscureText; //
   final bool isEmail;
 
@@ -66,8 +64,8 @@ final TextEditingController? controller; // Add controller parameter
     Key? key,
     required this.labelText,
     this.controller, // Initialize controller parameter
-     this.obscureText = false, // Default value is false
-     this.isEmail = false, // Default value is false
+    this.obscureText = false, // Default value is false
+    this.isEmail = false, // Default value is false
   }) : super(key: key);
 
   @override
@@ -85,14 +83,14 @@ final TextEditingController? controller; // Add controller parameter
         labelStyle: const TextStyle(
           color: AppColors.greyMedium,
           fontSize: 18,
-          
           fontWeight: FontWeight.w400,
         ),
         focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color:  AppColors.secondaryColor,),
+          borderSide: BorderSide(
+            color: AppColors.secondaryColor,
+          ),
         ),
       ),
-      
     );
   }
 }

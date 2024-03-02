@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/custom_widgets.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter/cupertino.dart';
 
 class BookSlotPage extends StatefulWidget {
   const BookSlotPage({Key? key}) : super(key: key);
@@ -61,14 +62,17 @@ class _BookSlotPageState extends State<BookSlotPage> {
                   children: <Widget>[
                     const Text(
                       'Select Date',
-                      style: TextStyle(
-                          
-                          color: AppColors.textDark,
-                          fontSize: 20),
+                      style: TextStyle(color: AppColors.textDark, fontSize: 20),
                     ),
                     const SizedBox(height: 5),
                     Container(
-                      decoration: BoxDecoration(boxShadow: const [BoxShadow(color: AppColors.greyDark,offset: Offset(0, 2),blurRadius: 2)],
+                      decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                              color: AppColors.greyDark,
+                              offset: Offset(0, 2),
+                              blurRadius: 2)
+                        ],
                         color: AppColors.textLightblue,
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -134,11 +138,13 @@ class _BookSlotPageState extends State<BookSlotPage> {
                             ? Text(
                                 _selectedDate!.toString().substring(0, 10),
                                 style: const TextStyle(
-                                    color: AppColors.primaryLight, fontSize: 16),
+                                    color: AppColors.primaryLight,
+                                    fontSize: 16),
                               )
                             : const Text(
                                 'No Date Selected',
-                                style: TextStyle(fontSize: 16, color: Colors.red),
+                                style:
+                                    TextStyle(fontSize: 16, color: Colors.red),
                               ),
                       ],
                     ),
@@ -146,9 +152,10 @@ class _BookSlotPageState extends State<BookSlotPage> {
                     const Text(
                       'Select Time',
                       style: TextStyle(
-                          color: AppColors.textDark,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,),
+                        color: AppColors.textDark,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                     const SizedBox(
                       height: 5,
@@ -157,29 +164,98 @@ class _BookSlotPageState extends State<BookSlotPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Container(decoration: const BoxDecoration(boxShadow: [BoxShadow(color: AppColors.greyDark,blurRadius: 2,offset: Offset(0, 2))]),
-                          height: 40,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              ).then((value) {
-                                if (value != null) {
-                                  setState(() {
-                                    _startTime = value;
-                                  });
-                                }
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.textLightblue),
-                            child:  Text(
-                              '${_startTime.hour}:${_startTime.minute}',
-                              style: const TextStyle(color: AppColors.textDark,),
-                            ),
-                          ),
-                        ),
+                        Container(
+                            decoration: const BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                color: AppColors.greyDark,
+                                offset: Offset(0, 2),
+                                blurRadius: 2,
+                              )
+                            ]),
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        backgroundColor: AppColors
+                                            .greyLight, // Set background color
+                                        title: const Text(
+                                          'Select Time', // Title text
+                                          style: TextStyle(
+                                            color: AppColors
+                                                .primaryColor, // Set title text color
+                                            fontWeight: FontWeight
+                                                .bold, // Make title text bold
+                                          ),
+                                        ),
+                                        content:  SizedBox(
+                                          height: 200,
+                                          child: CupertinoDatePicker(
+                                            mode: CupertinoDatePickerMode.time,
+                                            initialDateTime: DateTime(
+                                                1,
+                                                1,
+                                                1,
+                                                _startTime.hour,
+                                                _startTime.minute),
+                                            onDateTimeChanged:
+                                                (DateTime newDateTime) {
+                                              setState(() {
+                                                _startTime =
+                                                    TimeOfDay.fromDateTime(
+                                                        newDateTime);
+                                              });
+                                            },
+                                            use24hFormat:
+                                                true, // Set 24-hour format
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text(
+                                              'Cancel',
+                                              style: TextStyle(
+                                                color: AppColors
+                                                    .secondaryColor, // Set text color for Cancel button
+                                              ),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text(
+                                              'OK',
+                                              style: TextStyle(
+                                                color: AppColors
+                                                    .primaryColor, // Set text color for OK button
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.textLightblue,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  // side:
+                                  //     BorderSide(color: AppColors.primaryColor),
+                                ),
+                              ),
+                              child: Text(
+                                '${_startTime.hour}:${_startTime.minute.toString().padLeft(2, '0')}', // Format minutes with leading zero
+                                style: const TextStyle(
+                                  color: AppColors.primaryLight,
+                                ),
+                              ),
+                            )),
                         const SizedBox(
                           width: 20,
                         ),
@@ -187,30 +263,98 @@ class _BookSlotPageState extends State<BookSlotPage> {
                         const SizedBox(
                           width: 20,
                         ),
-                        SizedBox(
-                          height: 40,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              ).then((value) {
-                                if (value != null) {
-                                  setState(() {
-                                    _endTime = value;
-                                  });
-                                }
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.textLightblue),
-                            child:  Text(
-                              '${_endTime.hour}:${_endTime.minute}',
-                              style: const TextStyle(color: AppColors.textDark,
-                                  ),
-                            ),
-                          ),
-                        ),
+                        Container(
+                            decoration: const BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                color: AppColors.greyDark,
+                                offset: Offset(0, 2),
+                                blurRadius: 2,
+                              )
+                            ]),
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Container(decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0), // Set border radius here
+        color: AppColors.greyLight, ),
+                                      child: AlertDialog(
+                                        backgroundColor: AppColors
+                                            .greyLight, // Set background color
+                                        title: const Text(
+                                          'Select Time', // Title text
+                                          style: TextStyle(
+                                            color: AppColors
+                                                .primaryColor, // Set title text color
+                                            fontWeight: FontWeight
+                                                .bold, // Make title text bold
+                                          ),
+                                        ),
+                                        content: SizedBox(
+                                          height: 200,
+                                          child: CupertinoDatePicker(
+                                            mode: CupertinoDatePickerMode.time,
+                                            initialDateTime: DateTime(1, 1, 1,
+                                                _endTime.hour, _endTime.minute),
+                                            onDateTimeChanged:
+                                                (DateTime newDateTime) {
+                                              setState(() {
+                                                _endTime = TimeOfDay.fromDateTime(
+                                                    newDateTime);
+                                              });
+                                            },
+                                            use24hFormat:
+                                                true, // Set 24-hour format
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text(
+                                              'Cancel',
+                                              style: TextStyle(
+                                                color: AppColors
+                                                    .secondaryColor, // Set text color for Cancel button
+                                              ),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text(
+                                              'OK',
+                                              style: TextStyle(
+                                                color: AppColors
+                                                    .primaryColor, // Set text color for OK button
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.textLightblue,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  // side:
+                                  //     BorderSide(color: AppColors.primaryColor),
+                                ),
+                              ),
+                              child: Text(
+                                '${_endTime.hour}:${_endTime.minute.toString().padLeft(2, '0')}', // Format minutes with leading zero
+                                style: const TextStyle(
+                                  color: AppColors.primaryLight,
+                                ),
+                              ),
+                            )),
                       ],
                     ),
                     const SizedBox(height: 30),
@@ -227,7 +371,6 @@ class _BookSlotPageState extends State<BookSlotPage> {
                         Text(
                           '\$10',
                           style: TextStyle(
-                              
                               fontSize: 20,
                               fontWeight: FontWeight.w400,
                               color: AppColors.primaryLight),
