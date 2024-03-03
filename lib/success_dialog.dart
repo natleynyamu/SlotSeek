@@ -5,27 +5,30 @@ import 'app_colors.dart';
 import 'custom_widgets.dart';
 
 class SuccessDialog extends StatelessWidget {
-  const SuccessDialog({super.key});
+  final String successMessage;
+  final String buttonText;
+  final String messageDetail;
+
+  const SuccessDialog({super.key, 
+    required this.successMessage,
+    required this.messageDetail,
+    required this.buttonText,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       child: Container(
-        
         width: 350,
         height: 414,
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
-            gradient: const RadialGradient(colors: [
-          AppColors.primaryGradientStart,
-          AppColors.primaryGradientEnd
-        ]
-        )
+          gradient: const RadialGradient(colors: [
+            AppColors.primaryGradientStart,
+            AppColors.primaryGradientEnd
+          ]),
         ),
-        
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Center(
@@ -36,11 +39,11 @@ class SuccessDialog extends StatelessWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: CloseButton(
-                      color: AppColors.secondaryColor,
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    )
+                    color: AppColors.secondaryColor,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
                 SizedBox(
                   width: 100,
@@ -55,22 +58,24 @@ class SuccessDialog extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Well Done!',
-                  style: TextStyle(
+                Text(
+                  successMessage,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
                     color: AppColors.primaryColor,
                     fontSize: 24,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
                 const SizedBox(height: 10),
-                const SizedBox(
+                SizedBox(
                   width: 300,
                   child: Text(
-                    'You have successfully changed password! Please use the newly created password when logging in',textAlign: TextAlign.center,
-                    style: TextStyle(
+                    messageDetail,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
                       color: AppColors.textDark,
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -82,18 +87,15 @@ class SuccessDialog extends StatelessWidget {
                   child: PrimaryElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            const LoginPage(),
+                        builder: (context) => const LoginPage(),
                       ));
                     },
-                    text: 'Log In to Continue',
+                    text: buttonText,
                   ),
                 ),
               ],
-              
             ),
           ),
-          
         ),
       ),
     );

@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/sign_up.dart';
+import 'package:slot_seek/success_dialog.dart';
 
 import 'custom_widgets.dart';
 import 'email_verification.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +46,6 @@ class LoginPage extends StatelessWidget {
                     style: TextStyle(
                       color: AppColors.primaryColor,
                       fontSize: 32,
-                      
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -48,53 +56,80 @@ class LoginPage extends StatelessWidget {
                     style: TextStyle(
                       color: AppColors.textDark,
                       fontSize: 14,
-                   
                       fontWeight: FontWeight.w400,
                     ),
-                  ),   const SizedBox(height: 20),
-                  SizedBox(
-                    width: 300,
-                    child: Column(
-                      children: [
-                        const CustomTextFormField(
-                          labelText: 'Email',
-                        ),
-                        const SizedBox(height: 20),
-                        const CustomTextFormField(
-                          labelText: 'Password',
-                        ),
-                        const SizedBox(height: 40),
-                        SizedBox(
-                          width: 300,
-                          height: 60,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            // ignore: sort_child_properties_last
-                            child: const Text(
-                              'Log in',
-                              style: TextStyle(
-                                color: AppColors.textLightorange,
-                                fontSize: 20,
-                             
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                  ),
+                  const SizedBox(height: 20),
+                  Form( key: _formKey,
+                    child: SizedBox(
+                      width: 300,
+                      child: Column(
+                        children: [
+                          CustomTextFormField(controller: _emailController,
+                            labelText: 'Email',
+                            validator: (email) {
+                              if (email == null || email.isEmpty) {
+                                return 'Please enter an email address';
+                              } else if ((!RegExp(
+                                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                  .hasMatch(email))) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          CustomTextFormField(controller: _passwordController,
+                            labelText: 'Password',
+                            obscureText: true,
+                           validator: (password) {
+                              if (password == null || password.isEmpty) {
+                                return 'Please enter a password';
+                              } else if (password.length < 6) {
+                                return 'Password must be at least 6 characters long';
+                              } else if (!password.contains(RegExp(r'[A-Z]'))) {
+                                return 'Password must contain at least one uppercase letter';
+                              } else if (!password.contains(RegExp(r'[a-z]'))) {
+                                return 'Password must contain at least one lowercase letter';
+                              } else if (!password.contains(RegExp(r'[0-9]'))) {
+                                return 'Password must contain at least one digit';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 40),
+                          SizedBox(
+                            width: 300,
+                            height: 60,
+                            child: PrimaryElevatedButton(
+                              onPressed: () {
+                                // Login logic here
+                                // Validate the form
+                                    if (_formKey.currentState!.validate()) {
+                                      // Form is valid, continue with signup process
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const SuccessDialog(
+                                            successMessage:
+                                                'Account created Successfully',
+                                            buttonText: 'Log In to continue',
+                                            messageDetail:
+                                                'You have successfully created your account. Log in to continue and interact with the application',);});}
+                              },
+                              text: 'Log In',
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const ForgotPasswordEmailVerification(),
+                        builder: (context) =>
+                            const ForgotPasswordEmailVerification(),
                       ));
                     },
                     child: const Text(
@@ -102,7 +137,6 @@ class LoginPage extends StatelessWidget {
                       style: TextStyle(
                         color: AppColors.primaryColor,
                         fontSize: 14,
-                        
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -116,7 +150,6 @@ class LoginPage extends StatelessWidget {
                         style: TextStyle(
                           color: AppColors.textDark,
                           fontSize: 14,
-                          
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -133,7 +166,6 @@ class LoginPage extends StatelessWidget {
                           style: TextStyle(
                             color: AppColors.secondaryColor,
                             fontSize: 20,
-                           
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -148,5 +180,9 @@ class LoginPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool isValidEmail(String email) {
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
   }
 }

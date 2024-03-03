@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
+import 'package:slot_seek/success_dialog.dart';
+
 import 'custom_widgets.dart';
 
-
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _SignupPageState createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,45 +48,122 @@ class SignupPage extends StatelessWidget {
                     style: TextStyle(
                       color: AppColors.primaryColor,
                       fontSize: 32,
-                    
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                 
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Create an account to be able to keep your records, book records, leave feedback, set your preferences and receive personalized information',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.textDark,
-                      fontSize: 14,
-                 
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
+                  const SizedBox(height: 10),
+                  const SizedBox(
                     width: 300,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        SizedBox(height: 30),
-                        CustomTextFormField(
-                          labelText: 'Email',
-                        ),
-                        SizedBox(height: 20),
-                        CustomTextFormField(
-                          labelText: 'Password',
-                        ),
-                        SizedBox(height: 20),
-                        CustomTextFormField(
-                          labelText: 'Confirm Password',
-                        ),
-                        
-                                                
-                        
-                        
-                      ],
+                    child: Text(
+                      'Create an account to see and experience more features of this application',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.textDark,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Form(
+                    key: _formKey,
+                    child: SizedBox(
+                      width: 300,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 20),
+                          CustomTextFormField(controller: _nameController,
+                            labelText: 'Full Name',
+                            validator: (name) {
+                              if (name == null || name.isEmpty) {
+                                return 'Please enter your name';
+                              }else if(name.length<6){
+                                return 'Name should be at least 6 characters';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          CustomTextFormField(controller: _emailController,
+                            labelText: 'Email',
+                            validator: (email) {
+                              if (email == null || email.isEmpty) {
+                                return 'Please enter an email address';
+                              } else if ((!RegExp(
+                                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                  .hasMatch(email))) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          CustomTextFormField(
+                            labelText: 'Password',
+                            obscureText: true,
+                            controller: _passwordController,
+                            validator: (password) {
+                              if (password == null || password.isEmpty) {
+                                return 'Please enter a password';
+                              } else if (password.length < 6) {
+                                return 'Password must be at least 6 characters long';
+                              } else if (!password.contains(RegExp(r'[A-Z]'))) {
+                                return 'Password must contain at least one uppercase letter';
+                              } else if (!password.contains(RegExp(r'[a-z]'))) {
+                                return 'Password must contain at least one lowercase letter';
+                              } else if (!password.contains(RegExp(r'[0-9]'))) {
+                                return 'Password must contain at least one digit';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          CustomTextFormField(
+                            labelText: 'Confirm Password',
+                            obscureText: true,
+                            validator: (passwordConfirm) {
+                              if (passwordConfirm == null ||
+                                  passwordConfirm.isEmpty) {
+                                return 'Please confirm your password';
+                              } else if (passwordConfirm !=
+                                  _passwordController.text) {
+                                return 'Passwords do not match';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: SizedBox(
+                              width: 300,
+                              height: 60,
+                              child: PrimaryElevatedButton(
+                                onPressed: () {
+                                  // Validate the form
+                                  if (_formKey.currentState!.validate()) {
+                                    // Form is valid, continue with signup process
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const SuccessDialog(
+                                          successMessage:
+                                              'Account created Successfully',
+                                          buttonText: 'Log In to continue',
+                                          messageDetail:
+                                              'You have successfully created your account. Log in to continue and interact with the application',
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                text: 'Sign Up',
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ],

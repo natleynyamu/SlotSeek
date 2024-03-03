@@ -56,41 +56,39 @@ class BackButtonWidget extends StatelessWidget {
 
 class CustomTextFormField extends StatelessWidget {
   final String labelText;
-  final TextEditingController? controller; // Add controller parameter
+  final String? Function(String?) validator;
+   final TextEditingController? controller; // Add controller parameter
   final bool obscureText; //
   final bool isEmail;
 
   const CustomTextFormField({
     Key? key,
     required this.labelText,
-    this.controller, // Initialize controller parameter
+    required this.validator,
+     this.controller, // Initialize controller parameter
     this.obscureText = false, // Default value is false
-    this.isEmail = false, // Default value is false
+    this.isEmail = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       cursorColor: AppColors.secondaryColor,
-      validator: (value) {
-        if (isEmail && (value == null || !EmailValidator.validate(value))) {
-          return 'Please enter a valid email address';
-        }
-        return null; // Return null if validation succeeds
-      },
+      obscureText: obscureText,
       decoration: InputDecoration(
-        labelText: labelText,
-        labelStyle: const TextStyle(
-          color: AppColors.greyMedium,
-          fontSize: 18,
-          fontWeight: FontWeight.w400,
-        ),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: AppColors.secondaryColor,
+          labelText: labelText,
+          labelStyle: const TextStyle(
+            color: AppColors.greyMedium,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
           ),
-        ),
-      ),
+          focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+            color: AppColors.secondaryColor,
+          ))),
+      validator: validator,
     );
   }
 }

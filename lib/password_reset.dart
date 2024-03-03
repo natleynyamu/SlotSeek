@@ -3,9 +3,17 @@ import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/custom_widgets.dart';
 import 'package:slot_seek/success_dialog.dart';
 
-class PasswordReset extends StatelessWidget {
+
+class PasswordReset extends StatefulWidget {
   const PasswordReset({super.key});
 
+  @override
+  State<PasswordReset> createState() => _PasswordResetState();
+}
+
+class _PasswordResetState extends State<PasswordReset> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,23 +81,61 @@ class PasswordReset extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        const CustomTextFormField(
-                          labelText: 'New Password',
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              CustomTextFormField(controller: _passwordController,
+                                labelText: 'New Password',
+                                validator: (password) {
+                                  if (password == null || password.isEmpty) {
+                                    return 'Please enter a password';
+                                  } else if (password.length < 6) {
+                                    return 'Password must be at least 6 characters long';
+                                  } else if (!password.contains(RegExp(r'[A-Z]'))) {
+                                    return 'Password must contain at least one uppercase letter';
+                                  } else if (!password.contains(RegExp(r'[a-z]'))) {
+                                    return 'Password must contain at least one lowercase letter';
+                                  } else if (!password.contains(RegExp(r'[0-9]'))) {
+                                    return 'Password must contain at least one digit';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              CustomTextFormField(
+                                labelText: 'Confirm Password',
+                                validator: (passwordConfirm) {
+                                  if (passwordConfirm == null ||
+                                      passwordConfirm.isEmpty) {
+                                    return 'Please confirm your password';
+                                  } else if (passwordConfirm !=
+                                      _passwordController.text) {
+                                    return 'Passwords do not match';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 20),
-                        const CustomTextFormField(
-                          labelText: 'Confirm Password',
-                        ),
+                        
                         const SizedBox(height: 30),
                         SizedBox(
                           height: 50,
                           width: 290,
                           child: PrimaryElevatedButton(
-                            onPressed: () {
+                            onPressed: () { // Validate the form
+                                  if (_formKey.currentState!.validate()) {
+                                    // Form is valid, continue with signup process
+                                  }
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return const SuccessDialog();
+                                  return const SuccessDialog(
+                                    buttonText: 'Log In to continue',
+                                    successMessage: 'Password change Successful!', messageDetail:  'You have successfully changed password! Please use the newly created password when logging in'
+                                  );
                                 },
                               );
                             },

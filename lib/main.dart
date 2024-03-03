@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
-import 'package:slot_seek/home.dart';
-import 'book_slot.dart';
+import 'package:slot_seek/get_started.dart';
 import 'splash_screen.dart';
 
 void main() {
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
         primaryColor: AppColors.primaryColor, 
         fontFamily: 'StudioFeixenSansTRIAL', // Use your custom font family here
       ),debugShowCheckedModeBanner: false,
-      home:const  BookSlotPage(),
+      home:const  GetStartedPage(),
     );
   }
 }

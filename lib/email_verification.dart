@@ -3,9 +3,16 @@ import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/custom_widgets.dart';
 import 'package:slot_seek/verification_code.dart';
 
-class ForgotPasswordEmailVerification extends StatelessWidget {
+class ForgotPasswordEmailVerification extends StatefulWidget {
   const ForgotPasswordEmailVerification({Key? key}) : super(key: key);
 
+  @override
+  State<ForgotPasswordEmailVerification> createState() => _ForgotPasswordEmailVerificationState();
+}
+
+class _ForgotPasswordEmailVerificationState extends State<ForgotPasswordEmailVerification> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,15 +85,25 @@ class ForgotPasswordEmailVerification extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Container(
-                      width: 320,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: BoxDecoration(
-                        //color: AppColors.primaryColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const CustomTextFormField(
-                        labelText: 'Enter your email',
+                    Form (
+                      key: _formKey,
+                      child: Container(
+                        width: 320,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(
+                          //color: AppColors.primaryColor,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child:  CustomTextFormField(controller: _emailController,
+                          labelText: 'Enter your email', validator: (email) {  if (email == null || email.isEmpty) {
+                              return 'Please enter an email address';
+                            } else if ((!RegExp(
+                                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                .hasMatch(email))) {
+                              return 'Please enter a valid email address';
+                            }
+                            return null; },
+                        ),
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -94,7 +111,11 @@ class ForgotPasswordEmailVerification extends StatelessWidget {
                       height: 50,
                       width: 290,
                       child: PrimaryElevatedButton(
-                        onPressed: () {
+                        onPressed: () { // Login logic here
+                                // Validate the form
+                                    if (_formKey.currentState!.validate()) {
+                                      // Form is valid, continue with signup process
+                                    }
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const ForgotPasswordVerificationCode(),
                           ));
