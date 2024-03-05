@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1031183302428",
+    "project_id": "slotseek-9f892",
+    "storage_bucket": "slotseek-9f892.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031183302428:android:d6a3fe675f8a01181c04d9",
+        "android_client_info": {
+          "package_name": "com.example.slot_seek"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzPQOd0Y3hOFHtilSd2Gh6SVRWytf2izw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

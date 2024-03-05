@@ -1,19 +1,48 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
-import 'onboarding.dart'; // Import your onboarding screen file
+import 'package:onboarding/onboarding.dart';
+import 'package:slot_seek/app_colors.dart';
+import 'package:slot_seek/get_started.dart';
+import 'package:slot_seek/custom_widgets.dart';
+import 'package:slot_seek/onboarding.dart'; // Import the primary elevated button
+
+void main() {
+  runApp(const MaterialApp(
+    home: LoadingPage(),
+  ));
+}
 
 class LoadingPage extends StatelessWidget {
   const LoadingPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Timer to delay the navigation decision
+    Timer(const Duration(seconds: 4), () {
+      // Check if the user has completed onboarding
+      bool onboardingCompleted = checkOnboardingCompleted();
+
+      // Navigate to the appropriate screen based on onboarding completion status
+      if (onboardingCompleted) {
+        // Navigate to the get started page
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const GetStartedPage(),
+        ));
+      } else {
+        // Navigate to the onboarding screen
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const OnboardingScreen(),
+        ));
+      }
+    });
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
           // Background picture
           Image.asset(
-            'assets/images/luxurious-car.jpg', 
+            'assets/images/luxurious-car.jpg',
             fit: BoxFit.cover,
           ),
           // Loading indicator centered on the screen
@@ -56,22 +85,17 @@ class LoadingPage extends StatelessWidget {
               ],
             ),
           ),
-          // Show the onboarding screen when loading is complete
-          FutureBuilder(
-            future: Future.delayed(const Duration(seconds: 2)), // Simulate loading delay
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                // Loading is complete, show the onboarding screen
-                return const OnboardingScreen(); // Replace OnboardingScreen() with your actual onboarding screen widget
-              } else {
-                // Show nothing while loading
-                return const SizedBox.shrink();
-              }
-            },
-          ),
         ],
       ),
     );
+  }
+
+  // Function to check if onboarding has been completed
+  bool checkOnboardingCompleted() {
+    // You can implement the logic to check if onboarding has been completed
+    // For example, you can use shared preferences or any other persistent storage mechanism
+    // Return true if onboarding has been completed, false otherwise
+    return false; // For demonstration purposes, always returns false
   }
 }
 
@@ -79,7 +103,6 @@ class LoadingDots extends StatefulWidget {
   const LoadingDots({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _LoadingDotsState createState() => _LoadingDotsState();
 }
 
@@ -125,7 +148,7 @@ class _LoadingDotsState extends State<LoadingDots>
               child: const Text('.',
                   style: TextStyle(
                       color: AppColors.textLightblue,
-                      fontSize: 24)), // Increase font size for bigger dots
+                      fontSize: 28)), // Increase font size for bigger dots
             ),
           );
         },

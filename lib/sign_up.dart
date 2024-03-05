@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/success_dialog.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'custom_widgets.dart';
 
 class SignupPage extends StatefulWidget {
@@ -14,9 +14,61 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _signUp() async {
+    // Store the context before the async operation
+    final BuildContext dialogContext = context;
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      // User signed up successfully, show success dialog
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: dialogContext, // Use the stored context here
+        builder: (BuildContext context) {
+          return const SuccessDialog(
+            successMessage: 'Account created Successfully',
+            buttonText: 'Log In to continue',
+            messageDetail:
+                'You have successfully created your account. Log in to continue and interact with the application',
+          );
+        },
+      );
+    } catch (e) {
+      // Handle signup error (show message, etc.) using the original context
+      String errorMessage =
+          'An error occurred while signing up. Please try again.';
+
+      // Check the type of error and provide specific error messages
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'email-already-in-use':
+            errorMessage = 'An account already exists for that email.';
+            break;
+
+          default:
+            errorMessage =
+                'An error occurred while signing up. Please try again later.';
+            break;
+        }
+      } // Show the error message using a SnackBar
+      ScaffoldMessenger.of(dialogContext).showSnackBar(
+        SnackBar(
+          content: Text(
+            errorMessage,
+            style: const TextStyle(color: AppColors.errorColor),
+          ),
+          backgroundColor: AppColors.greyLight,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,19 +125,21 @@ class _SignupPageState extends State<SignupPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const SizedBox(height: 20),
-                          CustomTextFormField(controller: _nameController,
+                          CustomTextFormField(
+                            controller: _nameController,
                             labelText: 'Full Name',
                             validator: (name) {
                               if (name == null || name.isEmpty) {
                                 return 'Please enter your name';
-                              }else if(name.length<6){
+                              } else if (name.length < 6) {
                                 return 'Name should be at least 6 characters';
                               }
                               return null;
                             },
                           ),
                           const SizedBox(height: 20),
-                          CustomTextFormField(controller: _emailController,
+                          CustomTextFormField(
+                            controller: _emailController,
                             labelText: 'Email',
                             validator: (email) {
                               if (email == null || email.isEmpty) {
@@ -140,22 +194,9 @@ class _SignupPageState extends State<SignupPage> {
                               width: 300,
                               height: 60,
                               child: PrimaryElevatedButton(
-                                onPressed: () {
-                                  // Validate the form
+                                onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    // Form is valid, continue with signup process
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const SuccessDialog(
-                                          successMessage:
-                                              'Account created Successfully',
-                                          buttonText: 'Log In to continue',
-                                          messageDetail:
-                                              'You have successfully created your account. Log in to continue and interact with the application',
-                                        );
-                                      },
-                                    );
+                                    await _signUp();
                                   }
                                 },
                                 text: 'Sign Up',

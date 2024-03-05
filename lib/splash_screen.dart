@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:slot_seek/loading_page.dart';
 import 'app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:onboarding/onboarding.dart';
 import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/get_started.dart';
 import 'package:slot_seek/custom_widgets.dart'; // Import the primary elevated button
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  const OnboardingScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _OnboardingScreenState createState() => _OnboardingScreenState();
 }
 
@@ -20,19 +21,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       body: Column(
         children: [
-          const Align(alignment: Alignment.topLeft,
+          const Align(
+            alignment: Alignment.topLeft,
             child: Text(
               'SlotSeek',
               style: TextStyle(
-              
                 color: AppColors.primaryColor,
                 fontSize: 16,
-              
                 fontWeight: FontWeight.w400,
               ),
             ),
           ),
-
           Expanded(
             child: PageView(
               controller: _pageController,
@@ -86,7 +85,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 20),
           Text(
             title,
-            style:const TextStyle(
+            style: const TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.w400,
               color: AppColors.primaryColor,
@@ -112,7 +111,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       children: [
         for (int i = 0; i < 4; i++)
           Container(
-            margin:const EdgeInsets.all(5),
+            margin: const EdgeInsets.all(5),
             width: 10,
             height: 10,
             decoration: BoxDecoration(
@@ -128,12 +127,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _buildButtons() {
     return Padding(
-      padding:const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         TextButton(
           onPressed: () {
             _pageController.previousPage(
-              duration:const Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
               curve: Curves.ease,
             );
           },
@@ -142,7 +141,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: TextStyle(
               fontSize: 20,
               color: AppColors.primaryColor,
-              
               fontWeight: FontWeight.w400,
               height: 0.06,
             ),
@@ -160,7 +158,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               )
             : PrimaryElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(
+                  _completeOnboarding(); // Mark onboarding as completed
+                  Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => const GetStartedPage(),
                     ),
@@ -170,6 +169,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
       ]),
     );
+  }
+
+  // Mark onboarding as completed
+  void _completeOnboarding() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboardingCompleted', true);
   }
 }
 
