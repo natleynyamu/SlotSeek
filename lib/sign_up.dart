@@ -60,9 +60,11 @@ class _SignupPageState extends State<SignupPage> {
       } // Show the error message using a SnackBar
       ScaffoldMessenger.of(dialogContext).showSnackBar(
         SnackBar(
-          content: Text(
-            errorMessage,
-            style: const TextStyle(color: AppColors.errorColor),
+          content: Center(
+            child: Text(
+              errorMessage,
+              style: const TextStyle(color: AppColors.errorColor),
+            ),
           ),
           backgroundColor: AppColors.greyLight,
         ),

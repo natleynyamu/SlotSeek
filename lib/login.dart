@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
+import 'package:slot_seek/home.dart';
 import 'package:slot_seek/sign_up.dart';
 import 'package:slot_seek/success_dialog.dart';
 
@@ -15,7 +17,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -60,12 +62,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Form( key: _formKey,
+                  Form(
+                    key: _formKey,
                     child: SizedBox(
                       width: 300,
                       child: Column(
                         children: [
-                          CustomTextFormField(controller: _emailController,
+                          CustomTextFormField(
+                            controller: _emailController,
                             labelText: 'Email',
                             validator: (email) {
                               if (email == null || email.isEmpty) {
@@ -79,10 +83,11 @@ class _LoginPageState extends State<LoginPage> {
                             },
                           ),
                           const SizedBox(height: 20),
-                          CustomTextFormField(controller: _passwordController,
+                          CustomTextFormField(
+                            controller: _passwordController,
                             labelText: 'Password',
                             obscureText: true,
-                           validator: (password) {
+                            validator: (password) {
                               if (password == null || password.isEmpty) {
                                 return 'Please enter a password';
                               } else if (password.length < 6) {
@@ -102,20 +107,51 @@ class _LoginPageState extends State<LoginPage> {
                             width: 300,
                             height: 60,
                             child: PrimaryElevatedButton(
-                              onPressed: () {
-                                // Login logic here
-                                // Validate the form
-                                    if (_formKey.currentState!.validate()) {
-                                      // Form is valid, continue with signup process
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return const SuccessDialog(
-                                            successMessage:
-                                                'Account created Successfully',
-                                            buttonText: 'Log In to continue',
-                                            messageDetail:
-                                                'You have successfully created your account. Log in to continue and interact with the application',);});}
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  // Perform login
+                                  try {
+                                    await FirebaseAuth.instance
+                                        .signInWithEmailAndPassword(
+                                      email: _emailController.text.trim(),
+                                      password: _passwordController.text.trim(),
+                                    );
+                                    // Navigate to success page or show success dialog
+                                    // ignore: use_build_context_synchronously
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const SuccessDialog(
+                                          successMessage:
+                                              'Logged In Successfully',
+                                          buttonText: 'Continue',
+                                          messageDetail:
+                                              'You have successfully logged in.',
+                                        );
+                                      },
+                                    ); // Navigate to the homepage
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => const HomePage(),
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    // Show error message
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Center(
+                                          child: Text(
+                                            'Invalid Username or Password!',
+                                            style: TextStyle(
+                                                color: AppColors.errorColor),
+                                          ),
+                                        ),
+                                        backgroundColor: AppColors.greyLight,
+                                      ),
+                                    );
+                                  }
+                                }
                               },
                               text: 'Log In',
                             ),
