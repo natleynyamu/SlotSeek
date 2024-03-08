@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:slot_seek/app_colors.dart';
+
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: CurvedRoadWithParking(),
   ));
 }
 
 class CurvedRoadWithParking extends StatelessWidget {
+  const CurvedRoadWithParking({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Curved Road with Parking'),
+        title: const Text('Curved Road with Parking'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Center(
-          child: Container(
+          child: SizedBox(
             height: double.infinity,
             width: 400,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -32,12 +36,18 @@ class CurvedRoadWithParking extends StatelessWidget {
                     ParkingSlot(),
                     ParkingSlot(),
                     ParkingSlot(),
+                    ParkingSlot(),
+                    ParkingSlot(),
+                    ParkingSlot(),
                   ],
                 ),
-                CurvedRoad(),
+                const CurvedRoad(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    ParkingSlot(),
+                    ParkingSlot(),
+                    ParkingSlot(),
                     ParkingSlot(),
                     ParkingSlot(),
                     ParkingSlot(),
@@ -56,9 +66,11 @@ class CurvedRoadWithParking extends StatelessWidget {
 }
 
 class CurvedRoad extends StatelessWidget {
+  const CurvedRoad({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 100,
       height: double.infinity,
       child: CustomPaint(
@@ -72,7 +84,7 @@ class CurvedRoadPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
-      ..color = Colors.grey
+      ..color = AppColors.greyLight
       ..style = PaintingStyle.stroke
       ..strokeWidth = 20;
 
@@ -104,6 +116,7 @@ class ParkingSlot extends StatelessWidget {
     );
   }
 }
+
 
 class ParkingSlotPainter extends CustomPainter {
   @override

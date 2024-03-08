@@ -3,6 +3,7 @@ import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/success_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'custom_widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -23,23 +24,53 @@ class _SignupPageState extends State<SignupPage> {
     final BuildContext dialogContext = context;
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      // Step 1: Create user in Firebase Authentication
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      // User signed up successfully, show success dialog
-      // ignore: use_build_context_synchronously
-      showDialog(
-        context: dialogContext, // Use the stored context here
-        builder: (BuildContext context) {
-          return const SuccessDialog(
-            successMessage: 'Account created Successfully',
-            buttonText: 'Log In to continue',
-            messageDetail:
-                'You have successfully created your account. Log in to continue and interact with the application',
-          );
-        },
-      );
+      try {
+        // Firestore write operation
+        // Step 2: Save additional user information (name) to Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set({
+          'name': _nameController.text
+              .trim(), // Assuming _nameController is defined
+          'email': _emailController.text.trim(),
+          // Add other fields as needed
+        });
+
+        // User signed up successfully, show success dialog
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: dialogContext, // Use the stored context here
+          builder: (BuildContext context) {
+            return const SuccessDialog(
+              successMessage: 'Account created Successfully',
+              buttonText: 'Log In to continue',
+              messageDetail:
+                  'You have successfully created your account. Log in to continue and interact with the application',
+            );
+          },
+        );
+      } catch (e) {
+        // Show the error message using a SnackBar
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(dialogContext).showSnackBar(
+          const SnackBar(
+            content: Center(
+              child: Text(
+                'An error occured while creating an account',
+                style: TextStyle(color: AppColors.errorColor),
+              ),
+            ),
+            backgroundColor: AppColors.greyLight,
+          ),
+        );
+      }
     } catch (e) {
       // Handle signup error (show message, etc.) using the original context
       String errorMessage =
