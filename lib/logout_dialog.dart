@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/get_started.dart';
+ 
+import 'package:firebase_auth/firebase_auth.dart';
 
-class LogoutDialog extends StatelessWidget {
+class LogoutDialog extends StatefulWidget {
   const LogoutDialog({Key? key}) : super(key: key);
 
+  @override
+  State<LogoutDialog> createState() => _LogoutDialogState();
+}
+
+class _LogoutDialogState extends State<LogoutDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,11 +50,7 @@ class LogoutDialog extends StatelessWidget {
             onPressed: () {
               // Perform logout action
               // For example, navigate to the login page
-              Navigator.pop(context); // Close dialog
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const GetStartedPage()),
-              );
+              signOut();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.secondaryColor,
@@ -57,5 +60,14 @@ class LogoutDialog extends StatelessWidget {
         ],
       ),
     );
+  }
+
+final FirebaseAuth auth = FirebaseAuth.instance;
+
+  //signout function
+  signOut() async {
+    await auth.signOut();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const GetStartedPage()));
   }
 }
