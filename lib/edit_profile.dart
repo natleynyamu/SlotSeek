@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/custom_widgets.dart';
@@ -58,10 +59,29 @@ class EditProfileDialog extends StatelessWidget {
           PrimaryElevatedButton(
             onPressed: () {
               // Perform the edit operation with the new name
-              // For example, you can update the user's profile with the new name
+              onPressed: () async {
+  try {
+    // Get the current user
+    User? user = FirebaseAuth.instance.currentUser;
 
-              // Close the dialog
-              Navigator.of(context).pop();
+    // Update the display name of the user
+    await user?.updateDisplayName(newName);
+
+    // Show success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Profile name updated successfully')),
+    );
+  } catch (e) {
+    // Show error message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to update profile name: $e')),
+    );
+  }
+
+  // Close the dialog
+  Navigator.of(context).pop();
+};
+
             },
             text: 'Save',
           ),
