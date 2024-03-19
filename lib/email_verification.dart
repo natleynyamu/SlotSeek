@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/custom_widgets.dart';
+import 'package:slot_seek/login.dart';
 import 'package:slot_seek/verification_code.dart';
 
 class ForgotPasswordEmailVerification extends StatefulWidget {
@@ -16,31 +17,49 @@ class _ForgotPasswordEmailVerificationState
     extends State<ForgotPasswordEmailVerification> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
+  bool _isLoading = false; // Track loading state
 
-  Future<bool> doesEmailExist(String email) async {
-    try {
-      // Check if the email exists in the Firebase Auth database
-      final userCredential =
-          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email.trim());
-      // If userCredential is empty, email does not exist
-      return userCredential.isNotEmpty;
-    } catch (e) {
-      // Show error message in a snack bar
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Center(
-            child: Text(
-              'An error occurred while checking email existence. Please try again later.',
-              style: TextStyle(color: AppColors.errorColor),
-            ),
-          ),
-          backgroundColor: AppColors.greyLight,
-        ),
-      );
-      return false;
-    }
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
   }
 
+  Future<void> passwordReset() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: _emailController.text.trim());
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Center(child: Text('Password reset email sent successfully.')),
+          backgroundColor: AppColors.primaryColor),
+        
+      );
+      
+    } on FirebaseAuthException catch (e) {
+      String message =
+          'Failed to send password reset email. Please try again later.';
+      if (e.code == 'user-not-found') {
+        message = 'No user found with this email.';
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppColors.errorColor,
+        ),
+      );
+      print('Error sending password reset email: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +81,8 @@ class _ForgotPasswordEmailVerificationState
           children: [
             BackButtonWidget(context: context),
             const Positioned(
-              top: 20,
-              right: 20,
+              top: 40,
+              right: 40,
               child: Text(
                 'SlotSeek',
                 style: TextStyle(
@@ -85,7 +104,7 @@ class _ForgotPasswordEmailVerificationState
                       child: Container(
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('images/email.png'),
+                            image: AssetImage('assets/images/email.png'),
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -139,43 +158,29 @@ class _ForgotPasswordEmailVerificationState
                       ),
                     ),
                     const SizedBox(height: 30),
-                    SizedBox(
+                    Container(
                       height: 50,
                       width: 290,
-                      child: PrimaryElevatedButton(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: AppColors.primaryColor,
+                      ),
+                      child: MaterialButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            final email = _emailController.text.trim();
-                            // Check if email exists in the database
-                            final emailExists = await doesEmailExist(email);
-                            if (emailExists) {
-                              // Navigate to verification code input page
-                              // ignore: use_build_context_synchronously
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ForgotPasswordVerificationCode(),
-                                ),
-                              );
-                            } else {
-                              // Show error message if email does not exist
-                              // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Center(
-                                    child: Text(
-                                      'This email does not exist. Please enter the email associated with your account.',
-                                      style: TextStyle(
-                                          color: AppColors.errorColor),
-                                    ),
-                                  ),
-                                  backgroundColor: AppColors.greyLight,
-                                ),
-                              );
-                            }
+                            await passwordReset();
                           }
+                        
                         },
-                        text: 'Send Code',
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                color: AppColors.secondaryLight,
+                              )
+                            : const Text(
+                                'Reset Password',
+                                style:
+                                    TextStyle(color: AppColors.textLightorange),
+                              ),
                       ),
                     ),
                   ],
