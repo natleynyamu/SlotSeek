@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:slot_seek/app_colors.dart';
 import 'package:slot_seek/custom_widgets.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:slot_seek/notifications.dart';
 
 class BookSlotPage extends StatefulWidget {
   final String slotId;
@@ -52,11 +53,11 @@ class _BookSlotPageState extends State<BookSlotPage> {
 
     if (picked != null && picked != _endDate) {
       DateTime newEndDate = picked;
-      // Check if the end time is less than 30 minutes after the start time
+      // Check if the end time is less than 20 minutes after the start time
       if (_startDate != null &&
           _startTime != null &&
-          newEndDate.isBefore(_startDate!.add(Duration(minutes: 30)))) {
-        // If the end time is less than 30 minutes after the start time,
+          newEndDate.isBefore(_startDate!.add(Duration(minutes: 20)))) {
+        // If the end time is less than 20 minutes after the start time,
         // set the end date to be at least one day after the start date
         //newEndDate = _startDate!.add(Duration(days: 1));
       }
@@ -99,9 +100,10 @@ class _BookSlotPageState extends State<BookSlotPage> {
         _startTime.minute,
       );
 
-      // Check if the picked end time is at least 30 minutes after the start time
+      // Check if the picked end time is at least 20 minutes after the start time
       // and also ensure it's not before the start time on the same day
-      if (pickedDateTime.isAfter(startDateTime.add(Duration(minutes: 30))) &&
+      if (pickedDateTime
+              .isAfter(startDateTime.add(const Duration(minutes: 20))) &&
           pickedDateTime.isAfter(startDateTime) &&
           pickedDateTime.isAfter(DateTime.now())) {
         setState(() {
@@ -114,7 +116,7 @@ class _BookSlotPageState extends State<BookSlotPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              'End time must be after the start time and at least 30 minutes after.',
+              'End time must be after the start time and at least 20 minutes after.',
             ),
           ),
         );
@@ -183,67 +185,65 @@ class _BookSlotPageState extends State<BookSlotPage> {
 
   double calculatePrice(DateTime? selectedStartDate, TimeOfDay startTime,
       DateTime? selectedEndDate, TimeOfDay endTime) {
-    // Define the base rate, peak rate, weekend rate, weekday rate, and discount rate
-    // const double baseRatePerHour = 3.50; // Example base rate per hour
-    const double peakRatePerHour = 5.00; // Example peak rate per hour
-    const double weekendRatePerHour = 4.00; // Example weekend rate per hour
-    const double weekdayRatePerHour = 3.50; // Example weekday rate per hour
-    const double discountRate =
-        0.9; // Example discount rate for bookings made at least 24 hours in advance
+    // Define the base rate per hour
+    const double baseRatePerHour = 3.50;
+    const double peakRatePerHour = 5.00;
+    const double weekendRatePerHour = 4.00;
+    const double discountRate = 0.9;
 
     // Check if startDate and endDate are not null
     if (selectedStartDate == null || selectedEndDate == null) {
-      // Handle the case where the dates are null, e.g., by returning a default value or showing an error message
-      return 0.0; // Return 0.0 as a default value or handle the error as needed
+      return 0.0;
     }
 
-// Convert TimeOfDay instances to DateTime instances
+    // Convert TimeOfDay instances to DateTime instances
     DateTime startDateTime = DateTime(
-        selectedStartDate.year,
-        selectedStartDate.month,
-        selectedStartDate.day,
-        startTime.hour,
-        startTime.minute);
-    DateTime endDateTime = DateTime(selectedEndDate.year, selectedEndDate.month,
-        selectedEndDate.day, endTime.hour, endTime.minute);
+      selectedStartDate.year,
+      selectedStartDate.month,
+      selectedStartDate.day,
+      startTime.hour,
+      startTime.minute,
+    );
+    DateTime endDateTime = DateTime(
+      selectedEndDate.year,
+      selectedEndDate.month,
+      selectedEndDate.day,
+      endTime.hour,
+      endTime.minute,
+    );
 
-    // If the end time is before the start time, it means the booking spans across midnight
-    // In this case, we add one day to the endDateTime to correctly calculate the duration
+    // If the end time is before the start time, add one day to endDateTime
     if (endDateTime.isBefore(startDateTime)) {
       endDateTime = endDateTime.add(const Duration(days: 1));
     }
 
     // Calculate the duration of the booking in hours
-    Duration duration = endDateTime.difference(startDateTime);
-    double hours = duration.inHours + (duration.inMinutes / 60);
+    double durationInHours =
+        endDateTime.difference(startDateTime).inMinutes / 60;
 
-    // Calculate the total price
-    double totalPrice;
-
-    // Check if the booking falls within peak hours
+    // Determine if the startDateTime falls within peak hours
     bool isPeakTime =
-        startDateTime.isAfter(peakStart) && endDateTime.isBefore(peakEnd);
+        startDateTime.isAfter(peakStart) && startDateTime.isBefore(peakEnd);
 
-    // Check if the booking is on a weekend
+    // Determine if the startDateTime is on a weekend
     bool isWeekend = startDateTime.weekday == DateTime.saturday ||
         startDateTime.weekday == DateTime.sunday;
 
-    // Check if the booking was made at least 24 hours in advance
+    // Determine if the booking was made at least 24 hours in advance
     bool isAdvanceBooking =
         DateTime.now().difference(startDateTime).inHours >= 24;
 
+    // Calculate the total price based on different rates and conditions
+    double totalPrice;
     if (isPeakTime) {
-      // If the booking is during peak hours, use the peak rate
-      totalPrice = hours * peakRatePerHour;
+      totalPrice = durationInHours * peakRatePerHour;
     } else if (isWeekend) {
-      // If the booking is on a weekend, use the weekend rate
-      totalPrice = hours * weekendRatePerHour;
+      totalPrice = durationInHours * weekendRatePerHour;
     } else {
-      // If the booking is on a weekday, use the weekday rate
-      totalPrice = hours * weekdayRatePerHour;
+      totalPrice = durationInHours * baseRatePerHour;
     }
 
-    // Apply the discount if the booking was made at least 24 hours in advance
+    // Apply discount for advance booking
     if (isAdvanceBooking) {
       totalPrice *= discountRate;
     }
@@ -555,7 +555,7 @@ class _BookSlotPageState extends State<BookSlotPage> {
         ));
   }
 
-  void bookSlot(DateTime startTime, DateTime endTime, String slotId) async {
+  void bookSlot(DateTime startTime, DateTime endTime, slotId) async {
     // Show progress indicator while checking slot availability
     showDialog(
       context: context,
@@ -601,6 +601,7 @@ class _BookSlotPageState extends State<BookSlotPage> {
 
         // Booking saved successfully
         Navigator.pop(context); // Close the progress dialog
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
@@ -612,6 +613,7 @@ class _BookSlotPageState extends State<BookSlotPage> {
             margin: EdgeInsets.only(bottom: 20), // Adjust the margin as needed
           ),
         );
+        addUserActivity('You have successfully booked a slot');
       } else {
         // If the slot is not available, close the progress dialog and show an error message
         Navigator.pop(context); // Close the progress dialog
@@ -676,5 +678,18 @@ class _BookSlotPageState extends State<BookSlotPage> {
     });
 
     return !isOverlapping; // Return true if the slot is available, false otherwise
+  }
+
+  Future<void> addUserActivity(String activityDetails) {
+    CollectionReference userActivity =
+        FirebaseFirestore.instance.collection('user_activity');
+    return userActivity
+        .add({
+          'bookingTime':FieldValue.serverTimestamp(), 
+              'activity_details': activityDetails,
+          // Add other fields as necessary
+        })
+        .then((value) => print("User Activity Added"))
+        .catchError((error) => print("Failed to add user activity: $error"));
   }
 }
