@@ -77,8 +77,7 @@ class HomePage extends StatelessWidget {
                     // Navigate to profile page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomePage()),
+                      MaterialPageRoute(builder: (context) => const HomePage()),
                     );
                   }
                   if (index == 1) {
@@ -201,7 +200,7 @@ class ParkingLot extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(
-                            width: 40,
+                            width: 30,
                           ),
                           // Display the second half of parking slots in the second column
                           Column(
@@ -216,14 +215,7 @@ class ParkingLot extends StatelessWidget {
                             ],
                           ),
                           //   // Stairs icon
-                          // Transform.rotate(
-                          //     angle: 90 * math.pi / 90,
-                          //   child: const Icon(
-                          //       Icons.stairs,
-                          //       color: AppColors.greyDark,
-                          //       size: 40,
-                          //     ),
-                          // ),
+                          // Image.asset('images/stairs.png')
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -320,7 +312,8 @@ void _showSlotDetailsDialog(BuildContext context, ParkingSlot slot) {
                 ),
                 const SizedBox(
                   height: 20,
-                ), Row(
+                ),
+                Row(
                   children: [
                     const Text('Type:'),
                     const SizedBox(
@@ -338,7 +331,8 @@ void _showSlotDetailsDialog(BuildContext context, ParkingSlot slot) {
                   ],
                 ),
                 const SizedBox(
-                  height: 20,),
+                  height: 20,
+                ),
                 Row(
                   children: [
                     const Text('Status:'),
@@ -346,7 +340,7 @@ void _showSlotDetailsDialog(BuildContext context, ParkingSlot slot) {
                       width: 10,
                     ),
                     Text(
-                      slot.status ,
+                      slot.status,
                       style: TextStyle(
                         color: slot.status == 'Available'
                             ? AppColors
@@ -358,15 +352,14 @@ void _showSlotDetailsDialog(BuildContext context, ParkingSlot slot) {
                 ),
                 const SizedBox(height: 30),
                 PrimaryElevatedButton(
-                  onPressed: slot.status == 'Available'
-                      ? () {
+                  onPressed:  () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => const BookSlotPage(),
+                              builder: (context) =>  BookSlotPage(slotId: slot.slotId,),
                             ),
                           );
-                        }
-                      : null, // Disable button if not available
+                        },
+                    
                   text: 'Book Slot',
                 ),
               ],
@@ -402,7 +395,7 @@ class ParkingSpace extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 150,
+        width: 120,
         height: 70,
         decoration: BoxDecoration(
           color: slotColor,
@@ -438,7 +431,7 @@ class ParkingSpace extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  slot.status ,
+                  slot.status,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
